@@ -8,6 +8,7 @@ export interface DraggableCardProps {
   doc: Document;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
+  onImageClick: (doc: Document) => void;
 }
 
 export interface DragItem {
@@ -15,5 +16,3 @@ export interface DragItem {
   id: string;
   type: string;
 }
-
-

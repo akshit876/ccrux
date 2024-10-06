@@ -1,8 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
 import {
-  Document,
   DraggableCardProps,
   DragItem,
 } from "../interfaces/Document";
@@ -12,9 +11,15 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
   doc,
   index,
   moveCard,
+  onImageClick,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isOver, setIsOver] = useState(false);
+
+  const handleImageClick = useCallback((event: React.MouseEvent) => {
+    event.stopPropagation();
+    onImageClick(doc);
+  }, [doc, onImageClick]);
 
   const [{ handlerId }, drop] = useDrop({
     accept: "card",
@@ -99,6 +104,7 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
           TYPE_TO_IMAGE_ID[doc.type] || 1005
         }/200/300`}
         alt={doc.title}
+        onClick={handleImageClick}
       />
       <h3>{doc.title}</h3>
       {isOver && <div className="reorder-indicator">Will be reordered</div>}

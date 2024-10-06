@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDocuments } from "./hooks/useDocuments";
 import { DraggableCard } from "./components/DraggableCard";
+import { Document } from "./interfaces/Document";
+import { ImageOverlay } from "./components/CardOverlay";
 import "./App.css";
 
 const App: React.FC = () => {
   const { documents, loading, isSaving, lastSaveTime, moveCard } =
     useDocuments();
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
 
   if (loading) {
     return <div>Loading documents...</div>;
@@ -22,10 +25,11 @@ const App: React.FC = () => {
           <div className="grid">
             {documents.map((doc, index) => (
               <DraggableCard
-                key={doc.type}
+                key={`${doc.type}-${index}`}
                 doc={doc}
                 index={index}
                 moveCard={moveCard}
+                onImageClick={(doc: Document) => setSelectedDoc(doc)}
               />
             ))}
           </div>
@@ -38,6 +42,7 @@ const App: React.FC = () => {
             ago
           </div>
         )}
+        <ImageOverlay doc={selectedDoc} onClose={() => setSelectedDoc(null)} />
       </div>
     </DndProvider>
   );
