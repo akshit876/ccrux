@@ -39,7 +39,7 @@ export const useDocuments = () => {
 
     setIsSaving(true);
     try {
-      await axios.post("/api/documents", documents);
+      await axios.post("/api/documents", { documents });
       setHasChanges(false);
       setLastSaveTime(new Date());
     } catch (error) {

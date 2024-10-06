@@ -12,7 +12,11 @@ async function enableMocking() {
   return worker.start();
 }
 
-enableMocking().then(() => {
-  const root = createRoot(document.getElementById("root")!);
-  root.render(<App />);
-});
+enableMocking()
+  .then(() => {
+    const root = createRoot(document.getElementById("root")!);
+    root.render(<App />);
+  })
+  .catch((err) => {
+    console.log({ err });
+  });
