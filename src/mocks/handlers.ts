@@ -13,20 +13,17 @@ function loadInitialDocuments() {
 }
 
 export const handlers = [
-  http.get("/api/fetch/documents", () => {
-    console.log("askdnskj");
+  http.get("/api/documents", () => {
     loadInitialDocuments();
     const storedDocuments = JSON.parse(
       localStorage.getItem("documents") || "[]"
     );
 
-    // Return a response object
     return new Response(JSON.stringify(storedDocuments), {
       headers: { "Content-Type": "application/json" },
     });
   }),
 
-  // POST handler for saving documents
   http.post("/api/documents", async ({ request }) => {
     const { documents } = (await request.json()) as DocumentsPayload;
     localStorage.setItem("documents", JSON.stringify(documents));
