@@ -14,7 +14,6 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
   onImageClick,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isOver, setIsOver] = useState(false);
 
   const handleImageClick = useCallback((event: React.MouseEvent) => {
@@ -75,6 +74,9 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
       item.index = hoverIndex;
+
+      // Update isOver state
+      setIsOver(monitor.isOver());
     },
   });
 
