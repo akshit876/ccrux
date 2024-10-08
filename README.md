@@ -2,6 +2,12 @@
 
 This application displays a grid of draggable document cards with images. Users can reorder the cards and view larger images by clicking on them.
 
+# Frontend Role
+
+I have built parts pertaining to the frontend of the application. As mentioned in the project description, the frontend is built with React and TypeScript.
+
+Please evaluate for the frontend role.
+
 ## Detailed Project Creation Steps
 
 1. **Project Initialization**
