@@ -14,6 +14,7 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
   onImageClick,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isOver, setIsOver] = useState(false);
 
   const handleImageClick = useCallback((event: React.MouseEvent) => {
