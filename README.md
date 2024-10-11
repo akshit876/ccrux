@@ -253,3 +253,59 @@ The built files will be in the `build` directory.
 - `src/interfaces`: TypeScript interfaces
 - `src/utils`: Utility functions and constants
 - `src/styles`: CSS files
+
+
+## Hypothetical API Design
+
+For long-term maintenance and scalability, we propose the following RESTful API design that allows for adding, removing, and updating elements (documents) in our system.
+
+### Base URL
+`https://api.documentgrid.com/v1`
+
+### Authentication
+All API endpoints require authentication. Use Bearer token authentication:
+```
+Authorization: Bearer <your_access_token>
+```
+
+### Endpoints
+
+#### Documents
+
+1. List Documents
+   - GET `/documents`
+   - Query Parameters:
+     - `page` (integer): Page number for pagination
+     - `limit` (integer): Number of items per page
+     - `sort` (string): Field to sort by (e.g., "title", "createdAt")
+     - `order` (string): Sort order ("asc" or "desc")
+     - `type` (string): Filter by document type
+   - Response: Array of document objects with pagination metadata
+
+2. Get Single Document
+   - GET `/documents/{documentId}`
+   - Response: Single document object
+
+3. Create Document
+   - POST `/documents`
+   - Request Body: Document object without ID
+   - Response: Created document object with ID
+
+4. Update Document
+   - PUT `/documents/{documentId}`
+   - Request Body: Updated document object
+   - Response: Updated document object
+
+5. Partial Update Document
+   - PATCH `/documents/{documentId}`
+   - Request Body: Partial document object with fields to update
+   - Response: Updated document object
+
+6. Delete Document
+   - DELETE `/documents/{documentId}`
+   - Response: Success message
+
+7. Reorder Documents
+   - POST `/documents/reorder`
+   - Request Body: Array of document IDs in the new order
+   - Response: Success message

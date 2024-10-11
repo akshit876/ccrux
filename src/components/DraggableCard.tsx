@@ -1,11 +1,14 @@
-import React, { useRef, useState, useCallback } from "react";
-import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
-import { XYCoord } from "dnd-core";
-import {
-  DraggableCardProps,
-  DragItem,
-} from "../interfaces/Document";
+import React, { useRef } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import { Document } from "../interfaces/Document";
 import { TYPE_TO_IMAGE_ID } from "../utils";
+
+interface DraggableCardProps {
+  doc: Document;
+  index: number;
+  moveCard: (dragIndex: number, hoverIndex: number) => void;
+  onImageClick: (doc: Document) => void;
+}
 
 export const DraggableCard: React.FC<DraggableCardProps> = ({
   doc,
@@ -14,22 +17,15 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
   onImageClick,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [isOver, setIsOver] = useState(false);
-
-  const handleImageClick = useCallback((event: React.MouseEvent) => {
-    event.stopPropagation();
-    onImageClick(doc);
-  }, [doc, onImageClick]);
 
   const [{ handlerId }, drop] = useDrop({
     accept: "card",
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
-        isOver: monitor.isOver(),
       };
     },
-    hover(item: DragItem, monitor: DropTargetMonitor) {
+    hover(item: { index: number }, monitor) {
       if (!ref.current) {
         return;
       }
@@ -41,49 +37,27 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
       }
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
-
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-
       const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 
-
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-
-      // Dragging downwards
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
-
-      // Dragging upwards
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
 
-      // Time to actually perform the action
       moveCard(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
       item.index = hoverIndex;
-
-      // Update isOver state
-      setIsOver(monitor.isOver());
     },
   });
 
   const [{ isDragging }, drag] = useDrag({
     type: "card",
     item: () => {
-      return { id: doc.type, index };
+      return { id: doc.id, index };
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -93,12 +67,14 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
   const opacity = isDragging ? 0.4 : 1;
   drag(drop(ref));
 
+  const handleImageClick = () => {
+    onImageClick(doc);
+  };
+
   return (
     <div
       ref={ref}
-      className={`card ${isDragging ? "dragging" : ""} ${
-        isOver ? "highlight" : ""
-      }`}
+      className={`draggable-card ${isDragging ? "is-dragging" : ""}`}
       style={{ opacity }}
       data-handler-id={handlerId}
     >
@@ -110,7 +86,6 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
         onClick={handleImageClick}
       />
       <h3>{doc.title}</h3>
-      {isOver && <div className="reorder-indicator">Will be reordered</div>}
     </div>
   );
 };
