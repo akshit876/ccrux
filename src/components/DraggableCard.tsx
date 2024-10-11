@@ -57,7 +57,7 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
   const [{ isDragging }, drag] = useDrag({
     type: "card",
     item: () => {
-      return { id: doc.id, index };
+      return { id: doc.type, index };
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),

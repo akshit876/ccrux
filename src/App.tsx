@@ -8,8 +8,7 @@ import { ImageOverlay } from "./components/CardOverlay";
 import "./App.css";
 
 const App: React.FC = () => {
-  const { documents, loading, isSaving, lastSaveTime, moveCard } =
-    useDocuments();
+  const { documents, loading, saving, lastSaveTime, moveCard } = useDocuments();
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
 
   if (loading) {
@@ -34,7 +33,7 @@ const App: React.FC = () => {
             ))}
           </div>
         )}
-        {isSaving && <div>Saving...</div>}
+        {saving && <div>Saving...</div>}
         {lastSaveTime && (
           <div>
             Last saved:{" "}
